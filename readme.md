@@ -55,7 +55,7 @@ The *coordinates* for GlyT2 and a POPC/CHOL membrane have been provided for you.
 
 `GlyT2_capped.pdb` contains coordinates of a homology model of GlyT2 based on the homologue dDAT, [published here](https://doi.org/10.1371/journal.pone.0157583).  `POPC_CLR_550.gro` contains coordinates for a model membrane of 80% POPC and 20% Cholesterol, made with [memgen](https://memgen.uni-saarland.de/), and equilibrated by me.
 
-The *forcefield* you will use is the [GROMOS 54a7](https://doi.org/10.1007/s00249-011-0700-9) forcefield, which has been provided in the `gromos54a7.ff/` folder, along with some useful `.itp` files. The forcefield folder I have provided includes instructions for physics, and descriptions of some specific molecules like lipids and amino acids.  We will also need to generate *parameters* for the molecules we introduce into our system, like our GlyT2 protein.
+The *forcefield* you will use is the [GROMOS 54a7](https://doi.org/10.1007/s00249-011-0700-9) forcefield, which has been provided in the `gromos54a7.ff/` folder, along with some useful `.itp` files. The forcefield folder I have provided includes instructions for the forcefield physics, and descriptions of some specific molecules like lipids and amino acids (*parameters*).  We will also need to generate *parameters* for additional molecules we introduce into our system, like our GlyT2 protein.
 
 ### Generating GlyT2 parameters
 
