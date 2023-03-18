@@ -24,11 +24,11 @@ You will need working installation of gromacs 2021.4, visualising molecular dyna
 
 ### Useful resources
 
-The [Gromacs manual](https://manual.gromacs.org/2021.4/index.html) includes extensive documentation for every gromacs command used in this tutorial.  every time you use a new gromacs command you should have a look at the manual to see what it does.
+The [Gromacs manual](https://manual.gromacs.org/2021.4/index.html) includes extensive documentation for every gromacs command used in this tutorial.  Whenever you use a new gromacs command, you should have a look at the manual to see what it does, and see if you can figure out why I wrote it in that particular way.
 
-I strongly encourage you to learn to work with an integrated development environment, such as [Visual Studio Code](https://code.visualstudio.com/).  IDEs like VSCode allow you to explore your file system, edit multiple documents at once, and run multiple terminal sessions all in a single window.  There are helpful extensions that make allow vscode to understand the shape of gromacs file types, which makes them much significantly easier to read and understand.  This is extremely valuable while you are learning how to read gromacs file formats.
+I strongly encourage you to learn to work with an integrated development environment, such as [Visual Studio Code](https://code.visualstudio.com/).  IDEs allow you to explore your file system, edit multiple documents at once, and run multiple terminal sessions all in a single window.  There are helpful extensions that make allow vscode to understand the shape of gromacs file types, which makes them significantly easier to read and understand.  This is especially valuable while you are learning how to work with gromacs and the associated file formats for the first time.
 
-I strongly encourage you to install VSCode and a [gromacs helper extension](https://marketplace.visualstudio.com/items?itemName=SupernovaZJX.gmx-helper) before you start this tutorial.
+I suggest that you install VSCode and a [gromacs helper extension](https://marketplace.visualstudio.com/items?itemName=SupernovaZJX.gmx-helper) before you start this tutorial.
 
 ### Recordkeeping
 
@@ -36,9 +36,9 @@ Whenever you use a computer to perform scientific process, such as building or a
 
 Your readme file should be sufficiently detailed that another scientists (who does not know you and does not know what you intended to do) could sit down at your computer and replicate your work with only your readme file.  Make sure your readme is good, because sometimes that scientist who does not know you, and does not know what you intended to do, will be you in the future, trying to figure out what you did six months ago!  
 
-You need to make your own readme file while you work through this tutortial.  **Do not try to write your readme file after.  That way lies misery.**
+You need to make your own readme file while you work through this tutortial.  **Do not try to write your readme file after you have finished.  That way lies misery.**
 
-## Tutorial
+## The Tutorial
 ### Getting started
 
 Any simulation needs three things:
