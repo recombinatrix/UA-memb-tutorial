@@ -2,7 +2,7 @@
 
 This was written by Ada Quinn, a researcher in computational chemisty at The University of Queensland.  This readme is version 1.1.2, dated 18 March 2023.  It is distributed under a GNU GPL-v3 (2007) licence.
 
-I wrote this to provide to students in my own research group, where I would be on hand to support them if something went wrong. If you are not my student I hope it is helpful to you, but use it at your own risk.
+I wrote this to provide to students in my own research group, where I would be on hand to support them if something went wrong. If you are not my student please know that I hope it is helpful to you, but use it at your own risk.
 
 ## Introduction
 
