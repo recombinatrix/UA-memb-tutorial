@@ -6,14 +6,14 @@ I wrote this to provide to students in my own research group, where I would be o
 
 ## Introduction
 
-This is a tutorial for building a simulation system of the human glycine transporter GlyT2 (uniprot id [SLC6A5](https://www.uniprot.org/uniprotkb/Q9Y345/entry)).  It was written to work with Gromacs version 2021.4, using the [GROMOS 54a7](https://doi.org/10.1007/s00249-011-0700-9) united atom forcefield.
+This is a tutorial for building a simulation system to study the human glycine transporter GlyT2 (uniprot id [SLC6A5](https://www.uniprot.org/uniprotkb/Q9Y345/entry)).  It was written to work with Gromacs version 2021.4, using the [GROMOS 54a7](https://doi.org/10.1007/s00249-011-0700-9) united atom forcefield.
 
 In this tutorial, you will place a homology model of GlyT2 into a binary POPC/cholesterol membrane, solvate this protein/membrane system, introduce sodium and chloride ions at a physiologically releveant concentration, and perform equilibration.  
 
 This entire tutorial and all associated files is availible for download from github at [https://github.com/recombinatrix/UA-memb-tutorial](https://github.com/recombinatrix/UA-memb-tutorial).  If you have git installed on your computer, you can download the tutorial and all associated files by running
 
 ~~~s
- ❯  git clone git@github.com:recombinatrix/UA-memb-tutorial.git
+git clone git@github.com:recombinatrix/UA-memb-tutorial.git
 ~~~
 
 ### Requirements
@@ -64,7 +64,7 @@ Lets start by generating parameters for GlyT2.
 First, we generate a protein topology using `pdb2gmx`. 
 
 ~~~s
- ❯  gmx pdb2gmx -f GlyT2_capped.pdb -vsite hydrogens -heavyh -ter -ignh -o 01_GlyT2_capped_pdb2gmx.pdb -p GlyT2_POPC_CLR.top
+gmx pdb2gmx -f GlyT2_capped.pdb -vsite hydrogens -heavyh -ter -ignh -o 01_GlyT2_capped_pdb2gmx.pdb -p GlyT2_POPC_CLR.top
 ~~~
 
 Choose these options:
@@ -159,15 +159,17 @@ You've just put all that information into a single include file
 We need to define the size of our simulation system, by specifying the box size of our universe.  We will do this with `editconf`.
 
 ~~~s
- ❯  gmx editconf -f 01_GlyT2_capped_pdb2gmx.pdb -o 02_GlyT2_capped_pdb2gmx_box.pdb -box 17 17 12
+gmx editconf -f 01_GlyT2_capped_pdb2gmx.pdb -o 02_GlyT2_capped_pdb2gmx_box.pdb \
+                 -box 17 17 12
 ~~~
 
 Next, do an energy minimization on this system.  This is a short simualtion that tries to move the atoms in the simualtion towards the nearest local minima in the energy landscape.  This is great for removing artefacts from the way you assemble your system, such as atoms with overlapping van der waals radii.  First we will use `grompp`, the gromacs preprocessor, to assemble all the parts of your simulation into a single tpr file, and perform some quality checks to make sure the simulation is well formed. Then we will use `mdrun` to actually run the energy minimzation.
 
 ~~~s
- ❯  gmx grompp -f minimise.mdp -c 02_GlyT2_capped_pdb2gmx_box.pdb -p GlyT2_POPC_CLR.top -o 03_GlyT2_capped_EM.tpr -maxwarn 1
+gmx grompp -f minimise.mdp -c 02_GlyT2_capped_pdb2gmx_box.pdb                  \
+           -p GlyT2_POPC_CLR.top -o 03_GlyT2_capped_EM.tpr -maxwarn 1
 
- ❯  gmx mdrun -v -deffnm 03_GlyT2_capped_EM
+gmx mdrun -v -deffnm 03_GlyT2_capped_EM
 ~~~
 
 Look at the output and see if the numbers are sensible. Every energy minimization step in this tutorial should end with a negative value for potential energy, and with the largest force on any one atom smaller than 10^4
@@ -183,7 +185,7 @@ Now you need to position the protein so it is overlapping the membrane in the co
 04_POPC_CLR_550_dry.pdb is very short in the Z dimension, and there isn't enough room for GlyT2.  We need to put the membrane in a bigger box so we can arrange the protein and membrane in the correct orientation.  To make a bigger box, use `editconf`
 
 ~~~s
- ❯  gmx editconf -f 04_POPC_CLR_550_dry.pdb -o 05_POPC_CLR_550_dry_box.pdb -box 17 17 12
+gmx editconf -f 04_POPC_CLR_550_dry.pdb -o 05_POPC_CLR_550_dry_box.pdb -box 17 17 12
 ~~~
 
 Now we need to position the protein in the membrane, in the correct orientation.  To do this, we need to know what the correct orientation is!  We're going to use the orientation of a related protein, dDAT, as a reference.  You can download to orientation dDAT in a membrane from [the OPM database entry 4m48](https://opm.phar.umich.edu/proteins/2264), by clicking ` Download OPM File: 4m48.pdb `
@@ -203,7 +205,7 @@ The two proteins should now be very closely aligned, with their helices almost o
 Now combine the aligned protein and the dry membrane into one file with `cat`
 
 ~~~s
- ❯  cat 05_GlyT2_capped_moved.pdb 05_POPC_CLR_550_dry_box.pdb > 06_GlyT2_POPC_CLR_crude.pdb
+cat 05_GlyT2_capped_moved.pdb 05_POPC_CLR_550_dry_box.pdb > 06_GlyT2_POPC_CLR_crude.pdb
 ~~~
 
 Open ` 06_GlyT2_POPC_CLR_crude.pdb `.  Search for the place in the middle where the two files are joined.  It'll start with a line like ` TER ` or ` END `, and it'll look something like this:
@@ -261,13 +263,13 @@ Next, count how many POPC molecules are present.  To do this, you can use `grep`
 If we use the command
 
 ~~~s
- ❯  grep -c " CA " 07_GlyT2_POPC_CLR_hole.pdb
+grep -c " CA " 07_GlyT2_POPC_CLR_hole.pdb
 ~~~
 
 it will tell us how many times the pattern "` CA `" (with spaces) occurs in your file.  We could use this to count alpha carbons.  Unfortunately, alpha carbons are found in both POPC and amino acids, so that won't do.  If you ran
 
 ~~~s
- ❯  grep -c " POPC " 07_GlyT2_POPC_CLR_hole.pdb
+grep -c " POPC " 07_GlyT2_POPC_CLR_hole.pdb
 ~~~
 
 it would count the number of times "` POPC `" occurs in the file (again, with spaces).  Unfortunately, the string "` POPC `" occurs multiple times in every POPC molecule, so that won't do either.
@@ -290,8 +292,10 @@ Next, come up with a pattern to count the cholesterol molecules, and add them as
 Save the changes you made to your `.top` file, and do an energy minimisation.  If your `grompp` fails, you've probably made a mistake in one of the previous steps.  Have a look at your error message and see if you can figure out where.
 
 ~~~s
- ❯  gmx grompp -f minimise.mdp -c 07_GlyT2_POPC_CLR_hole.pdb -p GlyT2_POPC_CLR.top -o 08_GlyT2_POPC_CLR_hole_EM.tpr -maxwarn 1
- ❯  gmx mdrun -v -deffnm 08_GlyT2_POPC_CLR_hole_EM
+gmx grompp -f minimise.mdp -c 07_GlyT2_POPC_CLR_hole.pdb -p GlyT2_POPC_CLR.top \
+           -o 08_GlyT2_POPC_CLR_hole_EM.tpr -maxwarn 1
+
+gmx mdrun -v -deffnm 08_GlyT2_POPC_CLR_hole_EM
 ~~~
 
 Hopefully this worked.    Remember to check your evergy levels.
@@ -303,7 +307,8 @@ Next, we're going to add solvent to our system.
 We can do this with the ` gmx solvate ` command.
 
 ~~~s
- ❯  gmx solvate -cp 08_GlyT2_POPC_CLR_hole_EM.gro -p GlyT2_POPC_CLR.top -o 09_GlyT2_POPC_CLR_water_crude.pdb
+gmx solvate -cp 08_GlyT2_POPC_CLR_hole_EM.gro -p GlyT2_POPC_CLR.top           \
+            -o 09_GlyT2_POPC_CLR_water_crude.pdb
 ~~~
 
 gromacs will add solvent to your system, and update your `.top` file automatically.  whenevr gromacs overwrites a file, it saves a backup, and there will be a backup of your original `.top` file called something like `#GlyT2_POPC_CLR.top.1#`.  **IMPORTANT:** other programs, like `cat` or `cp` or `mv` will **NOT** make a backup of your files.  Often, they will just overwrite your files immediately and forever, without even asking.  Always be careful before you run a command that will alter or move a file.
@@ -319,9 +324,9 @@ Save the coordinates of everything except that water.  You'll want a selection s
 Open it in VMD and make sure it looks correct.  Once you're happy with it, figure out how you can use `grep -c` to count the number of remaining water molecules.  Update your topology file to reflect the new number.  Then, do another energy minimzation.
 
 ~~~s
- ❯  gmx grompp -f minimise.mdp -c 09_GlyT2_POPC_CLR_water_cut.pdb -p GlyT2_POPC_CLR.top -o 10_GlyT2_POPC_CLR_water_EM.tpr -maxwarn 1
+gmx grompp -f minimise.mdp -c 09_GlyT2_POPC_CLR_water_cut.pdb -p GlyT2_POPC_CLR.top -o 10_GlyT2_POPC_CLR_water_EM.tpr -maxwarn 1
 
- ❯  gmx mdrun -v -deffnm 10_GlyT2_POPC_CLR_water_EM
+gmx mdrun -v -deffnm 10_GlyT2_POPC_CLR_water_EM
 ~~~
 
 If your `grompp` fails, you've probably made a mistake in one of the previous steps.  Have a look at your error message and see if you can figure out where.
@@ -331,9 +336,11 @@ GlyT2 exists in cell membranes, and in a real physiological system there will be
 We're going to use `genion` to add ions. `genion` requires a `.tpr` file, so first we have to use `grompp` to make one.
 
 ~~~s
- ❯  gmx grompp -f minimise.mdp -c 10_GlyT2_POPC_CLR_water_EM.gro -p GlyT2_POPC_CLR.top -o 11_GlyT2_POPC_CLR_water_ions.tpr -maxwarn 1
+gmx grompp -f minimise.mdp -c 10_GlyT2_POPC_CLR_water_EM.gro -p GlyT2_POPC_CLR.top \
+           -o 11_GlyT2_POPC_CLR_water_ions.tpr -maxwarn 1
 
- ❯  gmx genion -s 11_GlyT2_POPC_CLR_water_ions.tpr -p GlyT2_POPC_CLR.top -conc 0.15 -neutral -o 11_GlyT2_POPC_CLR_water_ions.gro
+gmx genion -s 11_GlyT2_POPC_CLR_water_ions.tpr -p GlyT2_POPC_CLR.top -conc 0.15    \
+           -neutral -o 11_GlyT2_POPC_CLR_water_ions.gro
 ~~~
 
 Choose a group that corresponds to the water molecules.
@@ -343,17 +350,19 @@ Gromacs will now replace water molecules with ions and update your `.top` file f
 Do an energy minimzation of this new system.
 
 ~~~s
- ❯  gmx grompp -f minimise.mdp -c 11_GlyT2_POPC_CLR_water_ions.gro -p GlyT2_POPC_CLR.top -o 12_GlyT2_POPC_CLR_water_ions_EM1.tpr -maxwarn 1
+gmx grompp -f minimise.mdp -c 11_GlyT2_POPC_CLR_water_ions.gro -p GlyT2_POPC_CLR.top \
+           -o 12_GlyT2_POPC_CLR_water_ions_EM1.tpr -maxwarn 1
     
- ❯  gmx mdrun -v -deffnm 12_GlyT2_POPC_CLR_water_ions_EM1
+gmx mdrun -v -deffnm 12_GlyT2_POPC_CLR_water_ions_EM1
 ~~~
 
 Check the forces and energies.  Are they sensible?  If so, run a second EM.  If everything has gone well, this second EM should be quite short.
 
 ~~~s
- ❯  gmx grompp -f minimise.mdp -c 12_GlyT2_POPC_CLR_water_ions_EM1.gro -p GlyT2_POPC_CLR.top -o 13_GlyT2_POPC_CLR_water_ions_EM2.tpr -maxwarn 1
+gmx grompp -f minimise.mdp -c 12_GlyT2_POPC_CLR_water_ions_EM1.gro                 \
+           -p GlyT2_POPC_CLR.top -o 13_GlyT2_POPC_CLR_water_ions_EM2.tpr -maxwarn 1
 
- ❯  gmx mdrun -v -deffnm 13_GlyT2_POPC_CLR_water_ions_EM2
+gmx mdrun -v -deffnm 13_GlyT2_POPC_CLR_water_ions_EM2
 ~~~
 
 Check the forces and energies.  Have a look at it in vmd.  Does everything look correct?
@@ -369,7 +378,7 @@ To equilibriate our system, we are going to do a series of simulations where the
 When we simulate a system, we control the temperature with a thermostat.  We usually control the temperature of the solvent separately to the temperature of the solute.  To do this, need to make an *index file* to tell groamcs which atoms are solvent and which are solute.
 
 ~~~s
- ❯  gmx make_ndx -f 13_GlyT2_POPC_CLR_water_ions_EM2.gro -o GlyT2_POPC_CLR.ndx
+gmx make_ndx -f 13_GlyT2_POPC_CLR_water_ions_EM2.gro -o GlyT2_POPC_CLR.ndx
 ~~~
 
 This shows you all the different index groups that are already defined.  There should be one called `Water_and_ions`
@@ -417,7 +426,7 @@ You need to edit this file to add the remaining steps, for 100, 50 and 10.  You 
 Once you have done that, you need to tell your computer that it is allowed to execute the program `run_equil_1000_to_10.sh` .  To do that, use the command `chmod`
 
 ~~~s
- ❯  chmod +x run_equil_1000_to_10.sh
+chmod +x run_equil_1000_to_10.sh
 ~~~
 
 You might need to run that command as `sudo`
@@ -427,7 +436,7 @@ You are finally ready to run your equilibration.  This process will take several
 Once you are satisfied, run your eq with the command
 
 ~~~s
- ❯  ./run_equil_1000_to_10.sh
+./run_equil_1000_to_10.sh
 ~~~
 
 Good luck!  If all goes well, your final, fully equilibrated system, will be ready for you in a few hours.
