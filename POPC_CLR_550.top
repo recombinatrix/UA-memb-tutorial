@@ -1,0 +1,35 @@
+;
+;	File POPC_CLR_550.top was generated manually 
+;	By user: ada
+;	At date: Wed Sep 29 2021
+
+#define HEAVY_H
+
+; Include forcefield parameters
+#include "gromos54a7.ff/forcefield.itp"
+#include "gromos54a7.ff/popc.itp"
+#include "gromos54a7.ff/CLR.itp"
+
+; Include water topology
+#include "gromos54a7.ff/spc.itp"
+
+#ifdef POSRES_WATER
+
+; Position restraint for each water oxygen
+[ position_restraints ]
+;  i funct       fcx        fcy        fcz
+   1    1       1000       1000       1000
+#endif
+
+; Include topology for ions
+#include "gromos54a7.ff/ions.itp"
+
+[ system ]
+; Name
+Protein in water
+
+[ molecules ]
+; Compound        #mols
+POPC               880
+CLR                220
+SOL                38500
