@@ -169,7 +169,7 @@ gmx editconf -f 01_GlyT2_capped_pdb2gmx.pdb -o 02_GlyT2_capped_pdb2gmx_box.pdb \
 
 Next, do an energy minimization on this system.  This is a short simualtion that tries to move the atoms in the simualtion towards the nearest local minima in the energy landscape.  This is great for removing artefacts from the way you assemble your system, such as atoms with overlapping van der waals radii.  First we will use `grompp`, the gromacs preprocessor, to assemble all the parts of your simulation into a single tpr file, and perform some quality checks to make sure the simulation is well formed. Then we will use `mdrun` to actually run the energy minimzation.
 
-Look at the gromacs manual for `grompp` and `mdrun`.  What does `grompp` stand for?  What does `grompp` do?  What does `mdrun` do? Which flags are you using, and what do they do?
+Look at the gromacs manual for `grompp`.  What does `grompp` stand for?  What does `grompp` do?  Which flags are you using, and what do they do?
 
 ~~~s
 gmx grompp -f minimise.mdp -c 02_GlyT2_capped_pdb2gmx_box.pdb                  \
