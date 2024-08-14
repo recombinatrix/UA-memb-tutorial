@@ -62,7 +62,7 @@ The *forcefield* you will use is the [GROMOS 54a7](https://doi.org/10.1007/s0024
 
 Lets start by generating parameters for GlyT2.
 
-First, we generate a protein topology using `pdb2gmx`.
+We generate a protein topology using `pdb2gmx`.
 
 ~~~s
 gmx pdb2gmx -f GlyT2_capped.pdb -vsite hydrogens -heavyh -ter -ignh -o 01_GlyT2_capped_pdb2gmx.pdb -p GlyT2_POPC_CLR.top
@@ -75,7 +75,7 @@ Choose these options:
 * No change to the N-terminal cap: `None` (option 2)
 * No change to the C-terminal cap: `None` (option 2)
 
-Thi will generate two files: a coordinate file called ` 01_GlyT2_capped_pdb2gmx.pdb ` , which contains all atoms in the correct positions, and a topology file ` GlyT2_POPC_CLR.top `, which describes the parameters of GlyT2, and calls the GROMOS 54a7 forcefield.
+This will generate two files: a coordinate file called ` 01_GlyT2_capped_pdb2gmx.pdb ` , which contains all atoms in the correct positions, and a topology file ` GlyT2_POPC_CLR.top `, which describes the parameters of GlyT2, and calls the GROMOS 54a7 forcefield.
 
 First, have a look at ` GlyT2_POPC_CLR.top `.  At the beginning is a series of comments that describe how , where, and when it was made.
 
@@ -158,6 +158,11 @@ You've just put all that information into a single include file
 
 We need to define the size of our simulation system, by specifying the box size of our universe.  We will do this with `editconf`.
 
+
+Before you run this command, go to the [gromacs manual](manual.gromacs.org) and look at the entry for `editconf`.  Make sure you are looking at the manual for the version of gromacs you are using!
+
+What does this `editconf` do?  What do the `-f`, `-o` and `-box` flags do?
+
 ~~~s
 gmx editconf -f 01_GlyT2_capped_pdb2gmx.pdb -o 02_GlyT2_capped_pdb2gmx_box.pdb \
                  -box 17 17 12
@@ -165,10 +170,18 @@ gmx editconf -f 01_GlyT2_capped_pdb2gmx.pdb -o 02_GlyT2_capped_pdb2gmx_box.pdb \
 
 Next, do an energy minimization on this system.  This is a short simualtion that tries to move the atoms in the simualtion towards the nearest local minima in the energy landscape.  This is great for removing artefacts from the way you assemble your system, such as atoms with overlapping van der waals radii.  First we will use `grompp`, the gromacs preprocessor, to assemble all the parts of your simulation into a single tpr file, and perform some quality checks to make sure the simulation is well formed. Then we will use `mdrun` to actually run the energy minimzation.
 
+Look at the gromacs manual for `grompp` and `mdrun`.  What does `grompp` stand for?  What does `grompp` do?  What does `mdrun` do? Which flags are you using, and what do they do?
+
+
+
 ~~~s
 gmx grompp -f minimise.mdp -c 02_GlyT2_capped_pdb2gmx_box.pdb                  \
            -p GlyT2_POPC_CLR.top -o 03_GlyT2_capped_EM.tpr -maxwarn 1
+~~~
 
+Try running grommp without the `-maxwarn 1` flag, and see what happens.
+
+~~~s
 gmx mdrun -v -deffnm 03_GlyT2_capped_EM
 ~~~
 
@@ -344,7 +357,7 @@ Hopefully this worked.    Remember to check your evergy levels.
 
 Next, we're going to add solvent to our system.
 
-We can do this with the ` gmx solvate ` command.
+We can do this with the ` gmx solvate ` command.  But first, look up `solvate`  in the gromacs manual.  What does it do?  What flags are you using?
 
 ~~~s
 gmx solvate -cp 08_GlyT2_POPC_CLR_hole_EM.gro -p GlyT2_POPC_CLR.top           \
@@ -373,7 +386,9 @@ If your `grompp` fails, you've probably made a mistake in one of the previous st
 
 GlyT2 exists in cell membranes, and in a real physiological system there will be a certain concentration of salt.  To simulte this, we need to add ions.  We want to add enough ions to simulate a physiologically relevant concentration, and then add some extra ions to make sure our simulation has zero total charge.
 
-We're going to use `genion` to add ions. `genion` requires a `.tpr` file, so first we have to use `grompp` to make one.
+We're going to use `genion` to add ions. Look up `genion` in the gromacs manual, as before, and see what it does, and what the flags mean.  
+
+`genion` requires a `.tpr` file, so first we have to use `grompp` to make one.
 
 ~~~s
 gmx grompp -f minimise.mdp -c 10_GlyT2_POPC_CLR_water_EM.gro -p GlyT2_POPC_CLR.top \
@@ -461,6 +476,8 @@ Look at the file ` run_equil_1000_to_10.sh `
 
 This is a script that will run the first two steps of your equilibration, the 1000 step and the 500 step.
 
+How is the `grompp` command in this script different to the ones you have used previously?  What new flags are you using?  What do they mean?
+
 You need to edit this file to add the remaining steps, for 100, 50 and 10.  You can use the 500 step as a template.  Think about why the 1000 step would not make a good template.
 
 Once you have done that, you need to tell your computer that it is allowed to execute the program `run_equil_1000_to_10.sh` .  To do that, use the command `chmod`
@@ -480,3 +497,5 @@ Once you are satisfied, run your eq with the command
 ~~~
 
 Good luck!  If all goes well, your final, fully equilibrated system, will be ready for you in a few hours.
+
+If everything worked, show your readme file and your finished system to the person administering the tutorial.  Explain to them what you did, and what problems you had on the way.  Pick one gromacs command you used, and explain how it works, and why it was useful.

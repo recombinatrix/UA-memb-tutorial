@@ -22,7 +22,6 @@ fourierspacing      =  0.12
 ; Berendsen temperature coupling is on in two groups
 Tcoupl              =  v-rescale 
 tau_t               =  0.1       0.1
-; MARTYNA, edit the line below here
 tc-grps             =  Water_and_ions non_water_ions  
 ref_t               =   300       300      
 ; Pressure coupling is on
