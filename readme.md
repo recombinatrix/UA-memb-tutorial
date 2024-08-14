@@ -244,15 +244,56 @@ get rid of every line that doesn't start with ` ATOM ` from this middle part, so
 
 Save your edits and close the file.
 
-Open ` 06_GlyT2_POPC_CLR_crude.pdb ` in VMD.  You can see that the protein and the membrane are overlapping.  We need to fix this by removing every lipid that is overlapping with the protein.
+#### Identifying problems
 
-Come up with a vmd selection string that will remove the POPC and CLR molecules that are overlapping with GlyT2.  You might want a selection string like ` not ( resname POPC CLR and same resid as ( resname POPC CLR and within 5 of protein ) `
+Open ` 06_GlyT2_POPC_CLR_crude.pdb ` in VMD.  There are two problems with this file:
 
-Take a moment to figure out what each part of that selection string does.  Try removing different parts and seeing what breaks!  At the end, you need to make sure you have only removed lipids (not amino acids), that you have only removed entire lipid molecules, not just those parts of each lipid that are close to GlyT2.  If you do it wrong, you'll know because your next `grompp` will fail.
+To find the first problem, make a representation for the POPC lipids, the CLR lipids, and the protein.  For the protein, you need to use a special selection string:  `protein or resname ACE NH2`.  This is because sometimes VMD does not recognise the `ACE` and `NH2` caps as part of the protein.
 
-Save this as ` 07_GlyT2_POPC_CLR_hole.pdb `
+Look at your representations.  You can see that the protein and the membrane are overlapping; some of the lipids are in the same place as GlyT2. We need to fix this by removing every lipid that is overlapping with the protein.
 
-Open `07_GlyT2_POPC_CLR_hole.pdb` in vmd and check it looks correct.  There should be a protein in a membrane, and there should be a big hole in the membrane around the protein.  There should be no lipids touching or overlapping with the protein.  If this is not what you see, keep trying until you get it right.
+The second problem is more subtle.  To see it, we're going to need our representation for to show the protein: `protein or resname ACE NH2`.  Next, we need a second representation:  `same resid as (protein or resname ACE NH2)`.  What do you see?  Try making a third representation:  `(same resid as (protein or resname ACE NH2)) and not (protein or resname ACE NH2)`.  Compare it to the previous two.  
+
+What do you see?  Stop and think about what these representations are doing, and why they work differently.  Why is `same resid as (protein or resname ACE NH2)` not the same as `(same resid as (protein or resname ACE NH2)) and not (protein or resname ACE NH2)`?
+
+We need to fix this problem first.
+
+#### Fixing the problem with the membrane residue numbers
+
+To fix our membrane, we need to renumber the lipids.  Go to the [gromacs manual](manual.gromacs.org), and find the entry for the `editconf` command.  You need to write a command to change membrane residue numbers.  Look at the options in the manual and find a way to change the residue numebrs.  Think about what the residue number of the first POPC lipid needs to be.  
+
+Run your command to renumber the lipids.  Call your new membrane `06_POPC_CLR_550_dry_renumbered.pdb`.  Look at the file and see if it worked correctly.
+
+Combine your renumbered membrane with GlyT2, and clean it up by removing the lines between the protein and the membrane:
+
+~~~s
+cat 05_GlyT2_capped_moved.pdb 06_POPC_CLR_550_dry_renumbered.pdb > 06_GlyT2_POPC_CLR_crude_renumbered.pdb
+~~~
+
+#### Fixing the problem with the overlapping lipids
+
+Open `06_GlyT2_POPC_CLR_crude_renumbered.pdb` in vmd.
+
+We need to remove the lipids overlapping with GlyT2.  We're going to do this by finding a selection string for all the atoms we want to keep, and using it to save the coordinates of these atoms.
+
+To start with, lets think about some selection strings.
+
+1. `(resname POPC CLR and within 5 of protein)`.  This gives you every atom that meets two conditions: One, the atom belongs to a POPC or CLR molecule.  Two: the atom is within 5 A of one of the atoms in GlyT2.  
+
+2. `not (resname POPC CLR and within 5 of protein)`.  This gives you every atom that doe not meet the two conditions above.  It's the opposite of the previous selection.
+
+3. `(not (protein or resname NH2 ACE) and not (resname POPC CLR and within 5 of protein)`.  This is the same as above, but we have added a new condition:  The atoms must also not be part of the protein.
+
+How is number three different to number two?  Why have we added this?
+
+Number three is still not good enough.  Look at the POPC molecules near GlyT2.  You can see some of them have been cut in half. This is no good.
+
+Think about the VMD selections you have learned in this section, and in the  **Identifying problems** section, and use VMD to create a file that contains GlyT2, and and the lipids you want to keep, and none of the lipids you want to remove.  Make sure you don't vut any lipids in half.  make sure you don't remove any parts of the protein by accident.  
+
+Some people like to do this with just one selection string.  Some people like to do this by saving the protein to one file, saving the lipids they want to keep to another file, and those files afterwards combining them together. Find a process that works for you.  Save your final file, with GlyT2 and the lipids, as ` 07_GlyT2_POPC_CLR_hole.pdb `  If you do it wrong, you'll know because your next `grompp` will fail.
+
+
+Open `07_GlyT2_POPC_CLR_hole.pdb` in vmd and check it looks correct.  There should be a protein in a membrane, and there should be a big hole in the membrane around the protein.  There should be no lipids touching or overlapping with the protein.  If this is not what you see, keep trying until you get it right.  `hole.tga` contains an example of what it should look like from the top.
 
 Once you are happy you have everything right, you need to edit your topology file to include the new lipids.
 
@@ -274,7 +315,7 @@ grep -c " POPC " 07_GlyT2_POPC_CLR_hole.pdb
 
 it would count the number of times "` POPC `" occurs in the file (again, with spaces).  Unfortunately, the string "` POPC `" occurs multiple times in every POPC molecule, so that won't do either.
 
-Open `07_GlyT2_POPC_CLR_hole.pdb` as a text file, and scroll down to find a single POPC molecule.  See if you can come up with some string of characters that occurs exactly once in every single POPC molecule, and nowhere else.
+Open `07_GlyT2_POPC_CLR_hole.pdb` as in a text editor, and scroll down to find a single POPC molecule.  See if you can come up with some string of characters that occurs exactly once in every single POPC molecule, and nowhere else.
 
 Add the count of POPC molecules to the end of `GlyT2_POPC_CLR.top`
 
