@@ -39,6 +39,7 @@ Your readme file should be sufficiently detailed that another scientists (who do
 You need to make your own readme file while you work through this tutortial.  **Do not try to write your readme file after you have finished.  That way lies misery.**
 
 ## The Tutorial
+
 ### Getting started
 
 Any simulation needs three things:
@@ -61,7 +62,7 @@ The *forcefield* you will use is the [GROMOS 54a7](https://doi.org/10.1007/s0024
 
 Lets start by generating parameters for GlyT2.
 
-First, we generate a protein topology using `pdb2gmx`. 
+First, we generate a protein topology using `pdb2gmx`.
 
 ~~~s
 gmx pdb2gmx -f GlyT2_capped.pdb -vsite hydrogens -heavyh -ter -ignh -o 01_GlyT2_capped_pdb2gmx.pdb -p GlyT2_POPC_CLR.top
@@ -69,10 +70,10 @@ gmx pdb2gmx -f GlyT2_capped.pdb -vsite hydrogens -heavyh -ter -ignh -o 01_GlyT2_
 
 Choose these options:
 
- * The `GROMOS54a7` forcefield folder in the folder (probably option 1)
- * The `SPC` water model (option 1)
- * No change to the N-terminal cap: `None` (option 2)
- * No change to the C-terminal cap: `None` (option 2)
+* The `GROMOS54a7` forcefield folder in the folder (probably option 1)
+* The `SPC` water model (option 1)
+* No change to the N-terminal cap: `None` (option 2)
+* No change to the C-terminal cap: `None` (option 2)
 
 Thi will generate two files: a coordinate file called ` 01_GlyT2_capped_pdb2gmx.pdb ` , which contains all atoms in the correct positions, and a topology file ` GlyT2_POPC_CLR.top `, which describes the parameters of GlyT2, and calls the GROMOS 54a7 forcefield.
 
@@ -84,7 +85,7 @@ Next there are some rules for the forcefield, like
     #define HEAVY_H
 ~~~
 
-which tells gromacs to use the rules for heavy hydrogens, and 
+which tells gromacs to use the rules for heavy hydrogens, and
 
 ~~~c
     #include "gromos54a7.ff/forcefield.itp"
@@ -102,7 +103,7 @@ This section starts with:
     Protein             3
 ~~~
 
-and ends with 
+and ends with
 
 ~~~c
     5254  5248  5249  5250     4 
@@ -115,7 +116,7 @@ and ends with
     #endif
 ~~~
 
-After that, we have some rules to include water and ion topology, again calling `.itp` files for water and ions. 
+After that, we have some rules to include water and ion topology, again calling `.itp` files for water and ions.
 
 Right at the end, there is a section that lists every molecule in the system.  Right now, that's very simple because there's only one molecule: the protein.
 
@@ -125,8 +126,7 @@ Right at the end, there is a section that lists every molecule in the system.  R
     Protein             1
 ~~~
 
-
-The topology file is very big and unwieldy, you will need to edit it.  Usually we like to keep topology files quite minimal, and use ` .itp ` include files to contain the properties of individual molecules within the system.  This is very useful when you need to build your next system, as you can just choose the `.itp` files you need. 
+The topology file is very big and unwieldy, you will need to edit it.  Usually we like to keep topology files quite minimal, and use ` .itp ` include files to contain the properties of individual molecules within the system.  This is very useful when you need to build your next system, as you can just choose the `.itp` files you need.
 
 Now, make a new file called `GlyT2.itp`.  Copy all of the GlyT2 topology
 information from your `.top` file (`GlyT2_POPC_CLR.top`) into the `.itp` file.  You should be copying everything from
@@ -137,7 +137,7 @@ information from your `.top` file (`GlyT2_POPC_CLR.top`) into the `.itp` file.  
     Protein             3
 ~~~
 
-to 
+to
 
 ~~~c
     ; Include Position restraint file
@@ -154,7 +154,7 @@ Then, delete that entire section of the `.top` file, and replace it with this li
 
 You've just put all that information into a single include file
 
-### Energy minimization 
+### Energy minimization
 
 We need to define the size of our simulation system, by specifying the box size of our universe.  We will do this with `editconf`.
 
@@ -200,7 +200,7 @@ Next we want to align our GlyT2 model with 4m48.  To do this we're going to use 
 
 Open`05_4m48_aligned.pdb` and `03_GlyT2_capped_EM.gro` in PyMOL.  In the right hand menu bar, click on the `A` next to `03_GlyT2_capped_EM.gro`, and choose `align > to molecule > 05_4m48_aligned.pdb`   **NB: Make sure you align GlyT2 to 4m48, not the other way around!**
 
-The two proteins should now be very closely aligned, with their helices almost overlapping. Now we need to save th new coordinates.  Go to `File > Export Molecule`.  For selection choose ` 03_GlyT2_capped_EM `.  Check the box that says ` original atom order (according to "rank") ` (so PyMOL doesn't rearrange the atoms) and click `save…`. In the save dialogue box choose the `pdb` file format (NOT the default, which is usually `PDBx/mmCIF` ).  Save the data as ` 05_GlyT2_capped_moved.pdb ` 
+The two proteins should now be very closely aligned, with their helices almost overlapping. Now we need to save th new coordinates.  Go to `File > Export Molecule`.  For selection choose ` 03_GlyT2_capped_EM `.  Check the box that says ` original atom order (according to "rank") ` (so PyMOL doesn't rearrange the atoms) and click `save…`. In the save dialogue box choose the `pdb` file format (NOT the default, which is usually `PDBx/mmCIF` ).  Save the data as ` 05_GlyT2_capped_moved.pdb `
 
 Now combine the aligned protein and the dry membrane into one file with `cat`
 
@@ -210,7 +210,7 @@ cat 05_GlyT2_capped_moved.pdb 05_POPC_CLR_550_dry_box.pdb > 06_GlyT2_POPC_CLR_cr
 
 Open ` 06_GlyT2_POPC_CLR_crude.pdb `.  Search for the place in the middle where the two files are joined.  It'll start with a line like ` TER ` or ` END `, and it'll look something like this:
 
-~~~
+~~~pdb
     …
     ATOM   5468  O   ASP   757      26.817   8.144 -29.045  1.00  0.00           O
     TER
@@ -228,7 +228,7 @@ Open ` 06_GlyT2_POPC_CLR_crude.pdb `.  Search for the place in the middle where 
 
 get rid of every line that doesn't start with ` ATOM ` from this middle part, so it looks something like this:
 
-~~~
+~~~pdb
     …
     ATOM   5468  O   ASP   757      26.817   8.144 -29.045  1.00  0.00           O
     ATOM   5469  N   NH2   758      24.674   7.205 -29.068  1.00  0.00           N
@@ -284,20 +284,19 @@ To start with, lets think about some selection strings.
 
 3. `(not (protein or resname NH2 ACE) and not (resname POPC CLR and within 5 of protein)`.  This is the same as above, but we have added a new condition:  The atoms must also not be part of the protein.
 
-How is number three different to number two?  Why have we added this?
+How is number three different to number two?  Why have we added the extra condition?
 
 Number three is still not good enough.  Look at the POPC molecules near GlyT2.  You can see some of them have been cut in half. This is no good.
 
-Think about the VMD selections you have learned in this section, and in the  **Identifying problems** section, and use VMD to create a file that contains GlyT2, and and the lipids you want to keep, and none of the lipids you want to remove.  Make sure you don't vut any lipids in half.  make sure you don't remove any parts of the protein by accident.  
+Think about the VMD selections you have learned in this section, and in the  **Identifying problems** section, and use VMD to create a file that contains GlyT2, and and the lipids you want to keep, and none of the lipids you want to remove.  Make sure you don't cut any lipids in half.  Make sure you don't remove any parts of the protein by accident.
 
 Some people like to do this with just one selection string.  Some people like to do this by saving the protein to one file, saving the lipids they want to keep to another file, and those files afterwards combining them together. Find a process that works for you.  Save your final file, with GlyT2 and the lipids, as ` 07_GlyT2_POPC_CLR_hole.pdb `  If you do it wrong, you'll know because your next `grompp` will fail.
-
 
 Open `07_GlyT2_POPC_CLR_hole.pdb` in vmd and check it looks correct.  There should be a protein in a membrane, and there should be a big hole in the membrane around the protein.  There should be no lipids touching or overlapping with the protein.  If this is not what you see, keep trying until you get it right.  `hole.tga` contains an example of what it should look like from the top.
 
 Once you are happy you have everything right, you need to edit your topology file to include the new lipids.
 
-Edit ` GlyT2_POPC_CLR.top ` to add `#include ` statements for the `.itp` files for popc and cholesterol.  Have a look at ` POPC_CLR_550.top ` to see what it should look like.
+Edit ` GlyT2_POPC_CLR.top ` to add `#include` statements for the `.itp` files for popc and cholesterol.  Have a look at ` POPC_CLR_550.top ` to see what it should look like.
 
 Next, count how many POPC molecules are present.  To do this, you can use `grep`.  Grep looks for particular patterns in a file.
 
@@ -307,13 +306,13 @@ If we use the command
 grep -c " CA " 07_GlyT2_POPC_CLR_hole.pdb
 ~~~
 
-it will tell us how many times the pattern "` CA `" (with spaces) occurs in your file.  We could use this to count alpha carbons.  Unfortunately, alpha carbons are found in both POPC and amino acids, so that won't do.  If you ran
+it will tell us how many times the pattern "`CA`" (with spaces) occurs in your file.  We could use this to count alpha carbons.  Unfortunately, alpha carbons are found in both POPC and amino acids, so that won't do.  If you ran
 
 ~~~s
 grep -c " POPC " 07_GlyT2_POPC_CLR_hole.pdb
 ~~~
 
-it would count the number of times "` POPC `" occurs in the file (again, with spaces).  Unfortunately, the string "` POPC `" occurs multiple times in every POPC molecule, so that won't do either.
+it would count the number of times "`POPC`" occurs in the file (again, with spaces).  Unfortunately, the string "`POPC`" occurs multiple times in every POPC molecule, so that won't do either.
 
 Open `07_GlyT2_POPC_CLR_hole.pdb` as in a text editor, and scroll down to find a single POPC molecule.  See if you can come up with some string of characters that occurs exactly once in every single POPC molecule, and nowhere else.
 
@@ -328,7 +327,7 @@ It should look something like this
     POPC               880
 ~~~
 
-Next, come up with a pattern to count the cholesterol molecules, and add them as well. You'll need to figure this one out yourself. Once again, you want a string of characters that occurs exactly once in every cholesterol moelcule, but nowhere else. 
+Next, come up with a pattern to count the cholesterol molecules, and add them as well. You'll need to figure this one out yourself. Once again, you want a string of characters that occurs exactly once in every cholesterol moelcule, but nowhere else.
 
 Save the changes you made to your `.top` file, and do an energy minimisation.  If your `grompp` fails, you've probably made a mistake in one of the previous steps.  Have a look at your error message and see if you can figure out where.
 
@@ -448,7 +447,7 @@ If everything looks right, type `q` and then hit enter, and gromacs will save yo
 
 Next we need to edit `posre.itp`
 
-Open `posre.itp` in your editor of choice.  It contains a series of restraints that apply forces to every protein atom to prevent it from moving away from a set location in the x, y and z dimension.  By default, that force is defined by the constant 1000.  Have a look in the manual to understand how position restraints work, and what kind of units they use.  We want to change the force constant for our position restraints from an explicit value (1000) to a variable we can change whenever we want, called `p_rest`. 
+Open `posre.itp` in your editor of choice.  It contains a series of restraints that apply forces to every protein atom to prevent it from moving away from a set location in the x, y and z dimension.  By default, that force is defined by the constant 1000.  Have a look in the manual to understand how position restraints work, and what kind of units they use.  We want to change the force constant for our position restraints from an explicit value (1000) to a variable we can change whenever we want, called `p_rest`.
 
 Do a find and replace to change ` 1000  1000  1000 ` to ` p_rest p_rest p_rest `.  If you look in the different `equil_memb_N.mdp` files, you can see a statement that defines the value of `p_rest` for each simulation.  Think for a while about why we replaced ` 1000  1000  1000 ` with ` p_rest p_rest p_rest `, rather than just replacing ` 1000 ` with ` p_rest `.  There is a very important reason!
 
