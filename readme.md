@@ -266,7 +266,7 @@ The second problem is more subtle.  To see it, we're going to need our represent
 
 What do you see?  Stop and think about what these representations are doing, and why they work differently.  Why is `same resid as (protein or resname ACE NH2)` not the same as `(same resid as (protein or resname ACE NH2)) and not (protein or resname ACE NH2)`?
 
-We need to fix this problem first.
+What is the second problem?  We need to fix this problem first.
 
 #### Fixing the problem with the membrane residue numbers
 
