@@ -13,7 +13,7 @@ In this tutorial, you will place a homology model of GlyT2 into a binary POPC/ch
 This entire tutorial and all associated files is availible for download from github at [https://github.com/recombinatrix/UA-memb-tutorial](https://github.com/recombinatrix/UA-memb-tutorial).  If you have git installed on your computer, you can download the tutorial and all associated files by running
 
 ~~~s
-git clone git@github.com:recombinatrix/UA-memb-tutorial.git
+git clone https://github.com/recombinatrix/UA-memb-tutorial.git
 ~~~
 
 ### Requirements
