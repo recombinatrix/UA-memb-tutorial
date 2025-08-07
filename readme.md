@@ -10,7 +10,7 @@ This is a tutorial for building a simulation system to study the human glycine t
 
 In this tutorial, you will place a homology model of GlyT2 into a binary POPC/cholesterol membrane, solvate this protein/membrane system, introduce sodium and chloride ions at a physiologically releveant concentration, and perform equilibration.  
 
-This entire tutorial and all associated files is availible for download from github at [https://github.com/recombinatrix/UA-memb-tutorial](https://github.com/recombinatrix/UA-memb-tutorial).  If you have git installed on your computer, you can download the tutorial and all associated files by running
+This entire tutorial and all associated files is available for download from github at [https://github.com/recombinatrix/UA-memb-tutorial](https://github.com/recombinatrix/UA-memb-tutorial).  If you have git installed on your computer, you can download the tutorial and all associated files by running
 
 ~~~s
 git clone https://github.com/recombinatrix/UA-memb-tutorial.git
