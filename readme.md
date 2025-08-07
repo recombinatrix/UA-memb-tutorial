@@ -200,7 +200,7 @@ gmx editconf -f 04_POPC_CLR_550_dry.pdb -o 05_POPC_CLR_550_dry_box.pdb -box 17 1
 
 Now we need to position the protein in the membrane, in the correct orientation.  To do this, we need to know what the correct orientation is!  We're going to use the orientation of a related protein, dDAT, as a reference.  You can download to orientation dDAT in a membrane from [the OPM database entry 4m48](https://opm.phar.umich.edu/proteins/2264), by clicking ` Download OPM File: 4m48.pdb `
 
-Open ` 05_POPC_CLR_550_dry_box.pdb ` and ` 4m48.pdb ` in VMD.  The OPM structure has a red and blue layers that correspond to the top and bottom of a membrane.  Try to line these up with the top and bottom of ` 05_POPC_CLR_550_dry_box.pdb `, as well as you can.  You can use the phosphate atoms from POPC headgroups as a proxy for the interface of the bilayer, with the selection ` name P ` and the draw method `VDW`.
+Open ` 05_POPC_CLR_550_dry_box.pdb ` and ` 4m48.pdb ` in VMD.  The OPM structure has a red and blue layers that correspond to the top and bottom of a membrane.  Try to line these up with the top and bottom of ` 05_POPC_CLR_550_dry_box.pdb `, as well as you can.  You can use the phosphate atoms from POPC headgroups as a proxy for the interface between bilayer and the solvent, with the selection ` name P ` and the draw method `VDW`.
 
 To move 4m48 up and down you can either use `gmx editconf` or the vmd movement tools.  See what works best for you.  
 
