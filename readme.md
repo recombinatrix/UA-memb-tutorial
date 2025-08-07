@@ -495,6 +495,6 @@ Once you are satisfied, run your eq with the command
 
 Good luck!  If all goes well, your final, fully equilibrated system, will be ready for you in a few hours.
 
-While you are waiting, look at the gromacs manual entry for pdb2gmx.  What did it do?  What do the `-ter`, `-glu`, `-ss`, `-ignh`, `-vsite` `-heavyh` and `-deuterate` flags do?  Think about when you might want to use them.  Don't just assume the choices in this tutorial will be suitable for your own projects!
+While you are waiting, look at the gromacs manual entry for `pdb2gmx`.  What did it do?  What do the `-ter`, `-glu`, `-ss`, `-ignh`, `-vsite` `-heavyh` and `-deuterate` flags do?  Think about when you might want to use them.  Don't just assume the choices in this tutorial will be suitable for your own projects!
 
 If everything worked, show your readme file and your finished system to the person administering the tutorial.  Explain to them what you did, and what problems you had on the way.  Pick one gromacs command you used, and explain how it works, and why it was useful.
